@@ -82,6 +82,9 @@ If you uploaded a backup by mistake:
 - **Drag and drop does not work on iOS**: use the **↑/↓** buttons to reorder.
 - **Changes are not visible**: refresh 1–2 times; the Service Worker will update the cache.
 
+## Origins
+- This has been forked from https://github.com/mcruizgo/habit-tracker who made this with ❤️
+
 ---
 
 <p align="center">
