@@ -1,48 +1,44 @@
+<h1 align="center">Local Hero</h1>
 <p align="center">
-  <img src="assets/readme-hero.png" alt="Habit & Routine Tracker banner" width="100%" />
-</p>
-
-<h1 align="center">Habit & Routine Tracker</h1>
-<p align="center">
-  PWA local‑first para seguir hábitos fácilmente: AM/PM, rachas, adherencia, revisión semanal, backups (JSON/HRZ), PIN y soporte offline.
+  Progressive Web App, local-first, create & track habits easily: streaks, adherence, weekly reviews, backups (JSON/HRZ), PIN protection, and offline support.
 </p>
 
 <p align="center">
-  <a href="https://mcruizgo.github.io/habit-tracker/"><b>➡️ Abrir la app</b></a>
+  Open App: https://konijn.github.io/local-hero/
 </p>
 
 ---
 
 ## ✨ Features
-- **PWA** instalable (móvil/desktop), **offline** con Service Worker.
-- **Local-first**: datos en tu dispositivo (IndexedDB + persistencia solicitada).
-- **PIN** de apertura (4–8 dígitos) y **auto‑bloqueo**.
-- **Hábitos** con AM/PM, **objetivo diario** (>1), **días de la semana**, reordenar (drag & drop / ↑↓), archivar.
-- **Hoy** con contador por hábito (x/objetivo) y deshacer (5 s).
-- **Estadísticas Pro**: racha, adherencia 30 días, **calendario de calor**.
-- **Revisión semanal**: qué funcionó, ajustes y un “win” (histórico por semanas).
-- **Backups**: `backup.json` (plano) y **`.hrz` cifrado** (AES‑GCM + PBKDF2).
-- **Importación con merge**: fusiona datos por nombre de hábito.
-- **Multitab**: sincroniza cambios entre pestañas con BroadcastChannel.
-- **i18n** ES/EN y pequeños recordatorios suaves (in‑app) en franjas AM/PM.
+- **PWA** installable (mobile/desktop), **offline** with Service Worker.
+- **Local-first**: data stays on your device (IndexedDB + requested persistence).
+- **PIN** unlock (4–8 digits) and **auto-lock**.
+- **Habits** with AM/PM, **daily target** (>1), **days of the week**, reorder (drag & drop / ↑↓), archive.
+- **Today** view with counter per habit (x/target) and undo (5 s).
+- **Pro Statistics**: streak, 30-day adherence, **heatmap calendar**.
+- **Weekly Review**: what worked, adjustments, and a “win” (history by week).
+- **Backups**: `backup.json` (plain) and **encrypted `.hrz`** (AES-GCM + PBKDF2).
+- **Import with merge**: merges data by habit name.
+- **Multi-tab**: synchronizes changes between tabs using BroadcastChannel.
+- **i18n** ES/EN and gentle in-app reminders during AM/PM periods.
 
-## 🚀 Despliegue en GitHub Pages
-1. Crea el repo público (ej. `habit-tracker`) y sube:
+## 🚀 Deployment on GitHub Pages
+1. Create the public repository (e.g. `habit-tracker`) and upload:
    - `index.html`
    - `sw.js`
    - `manifest.webmanifest`
-   - carpeta `assets/` con los iconos y las imágenes del README
+   - `assets/` folder with icons and README images
 2. Settings → **Pages** → Source: *Deploy from a branch* → Branch: `main` → Folder: `/`.
-3. URL: `https://TU_USUARIO.github.io/TU_REPO/` (sustituye TU_USUARIO/TU_REPO).
-4. Abre la URL, espera 2–3 s y recarga (instala el SW). Luego **Instalar** en tu móvil.
+3. URL: `https://YOUR_USER.github.io/YOUR_REPO/` (replace YOUR_USER/YOUR_REPO).
+4. Open the URL, wait 2–3 seconds and refresh (installs the Service Worker). Then **Install** on your mobile device.
 
-## 📱 Instalación como PWA
-- **Android (Chrome)**: menú ⋮ → *Instalar app* (o *Añadir a pantalla principal*).
-- **iPhone (Safari)**: **Compartir** → *Añadir a pantalla de inicio*.
-- iOS ya está soportado con meta‑tags y safe areas.
+## 📱 Install as a PWA
+- **Android (Chrome)**: ⋮ menu → *Install app* (or *Add to Home Screen*).
+- **iPhone (Safari)**: **Share** → *Add to Home Screen*.
+- iOS is already supported with meta tags and safe areas.
 
-## ⚙️ Integración de iconos/manifest
-Asegúrate de tener en `<head>`:
+## ⚙️ Icon / Manifest Integration
+Make sure you have in `<head>`:
 ```html
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
@@ -56,38 +52,38 @@ Asegúrate de tener en `<head>`:
 ```
 
 ## 🧩 Service Worker
-`sw.js` usa **cache‑first** para estáticos y **fallback de navegación** a `index.html` cuando estás offline. Si tras una actualización no ves cambios:
-- Cierra la app instalada y vuelve a abrir la **URL** en el navegador → recarga.
-- O incrementa el nombre de caché en `sw.js` (ej. `hr-cache-v7`) y haz commit.
+`sw.js` uses a **cache-first** strategy for static assets and a **navigation fallback** to `index.html` when offline. If you do not see changes after an update:
+- Close the installed app and reopen the **URL** in the browser → refresh.
+- Or increment the cache name in `sw.js` (e.g. `hr-cache-v7`) and commit.
 
-## 🔐 Privacidad y PIN
-- Tus datos residen **solo** en tu dispositivo (IndexedDB/localStorage).
-- El **PIN** y auto‑bloqueo se gestionan localmente. Si lo olvidas, puedes borrar datos desde la pantalla de bloqueo e **importar** un backup.
-- Para almacenar en la nube, usa el backup **`.hrz` cifrado** con contraseña.
+## 🔐 Privacy and PIN
+- Your data resides **only** on your device (IndexedDB/localStorage).
+- The **PIN** and auto-lock are managed locally. If you forget it, you can erase data from the lock screen and **import** a backup.
+- To store data in the cloud, use the password-protected **encrypted `.hrz`** backup.
 
-## 🗃️ Backups (no subir al repo público)
-Crea un `.gitignore` con:
+## 🗃️ Backups (do not upload to the public repository)
+Create a `.gitignore` containing:
 ```gitignore
-# No subas tus datos personales del tracker
+# Do not upload your personal tracker data
 habit-backup.json
 *.hrz
 ```
-Si subiste un backup por error:
-1) bórralo con un nuevo commit; 2) cambia el PIN; 3) genera un nuevo backup. Si quieres, purga el histórico del repo con BFG o `git filter-repo`.
+If you uploaded a backup by mistake:
+1) delete it in a new commit; 2) change the PIN; 3) generate a new backup. Optionally purge repository history with BFG or `git filter-repo`.
 
-## 🧪 Verificación rápida
-- Marca hábitos, revisa **Estadísticas** y el **calendario de calor**.
-- Instálala como PWA, activa modo avión y comprueba que abre **offline**.
-- Prueba **backup.json** y **.hrz** (cifrado) y la **importación con merge**.
+## 🧪 Quick Verification
+- Check off habits, review **Statistics** and the **heatmap calendar**.
+- Install as a PWA, enable airplane mode, and verify it opens **offline**.
+- Test **backup.json** and **.hrz** (encrypted) and the **merge import** feature.
 
-## 🐛 Problemas comunes
-- **No aparece “Instalar app” en Android**: usa *Añadir a la pantalla principal* igualmente.
-- **iPhone no a pantalla completa**: borra el acceso previo y repite *Añadir a pantalla de inicio*.
-- **El arrastre no funciona en iOS**: usa los botones **↑/↓** para reordenar.
-- **Los cambios no se ven**: recarga 1–2 veces; el SW actualizará la caché.
+## 🐛 Common Issues
+- **“Install app” does not appear on Android**: use *Add to Home Screen* instead.
+- **iPhone not full screen**: remove the previous shortcut and repeat *Add to Home Screen*.
+- **Drag and drop does not work on iOS**: use the **↑/↓** buttons to reorder.
+- **Changes are not visible**: refresh 1–2 times; the Service Worker will update the cache.
 
 ---
 
 <p align="center">
-  Hecho con ❤️ para un uso personal, local y privado.
+  Made with ❤️ for personal, local, and private use.
 </p>
