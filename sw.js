@@ -46,7 +46,7 @@ self.addEventListener('fetch', (event) => {
       } catch (e) {
         const cached = await caches.match(toAbs('index.html'));
         if (cached) return cached;
-        return new Response('<h1>Offline</h1><p>Vuelve a conectarte para continuar.</p>', {headers: {'Content-Type':'text/html'}});
+        return new Response('<h1>Offline</h1><p>Reconnect to continue.</p>', {headers: {'Content-Type':'text/html'}});
       }
     })());
     return;
