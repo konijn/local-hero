@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Habit & Routine Tracker — PRO (PWA + IndexedDB + PIN)</title>
+  <title>Local Hero</title>
 
   <!-- PWA & metas -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -18,8 +18,8 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon-180.png">
 
   <!-- Social -->
-  <meta property="og:title" content="Habit & Routine Tracker">
-  <meta property="og:description" content="Seguimiento de hábitos simple, offline y privado. PWA + IndexedDB + PIN + backups.">
+  <meta property="og:title" content="Personal Hero">
+  <meta property="og:description" content="Simple, private, offline habit tracking. Progressive Web App (PWA) with IndexedDB storage, PIN protection, and backup support.">
   <meta property="og:image" content="assets/og-image.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -138,66 +138,65 @@
   <div class="container">
     <header>
       <div>
-        <div class="title">Habit & Routine Tracker</div>
-        <div class="subtitle" id="greeting">Buenos días</div>
+        <div class="title">Local Hero</div>
+        <div class="subtitle" id="greeting">Hi!</div>
       </div>
-      <nav class="tabs" role="tablist" aria-label="Secciones">
-        <button class="tab-btn" role="tab" id="tab-today" aria-selected="true" onclick="showTab('today')">Hoy</button>
-        <button class="tab-btn" role="tab" id="tab-habits" aria-selected="false" onclick="showTab('habits')">Hábitos</button>
-        <button class="tab-btn" role="tab" id="tab-stats" aria-selected="false" onclick="showTab('stats')">Estadísticas</button>
-        <button class="tab-btn" role="tab" id="tab-review" aria-selected="false" onclick="showTab('review')">Revisión</button>
-        <button class="tab-btn" role="tab" id="tab-backup" aria-selected="false" onclick="showTab('backup')">Copia/Restaurar</button>
+      <nav class="tabs" role="tablist" aria-label="Categories">
+        <button class="tab-btn" role="tab" id="tab-today" aria-selected="true" onclick="showTab('today')">Today</button>
+        <button class="tab-btn" role="tab" id="tab-habits" aria-selected="false" onclick="showTab('habits')">Habits</button>
+        <button class="tab-btn" role="tab" id="tab-stats" aria-selected="false" onclick="showTab('stats')">Statistics</button>
+        <button class="tab-btn" role="tab" id="tab-review" aria-selected="false" onclick="showTab('review')">Review</button>
+        <button class="tab-btn" role="tab" id="tab-backup" aria-selected="false" onclick="showTab('backup')">Backup/Restore</button>
       </nav>
     </header>
 
     <main class="grid">
-      <!-- HOY -->
+      <!-- Today -->
       <section id="panel-today" class="card">
         <div class="p">
           <div class="row" style="margin-bottom:10px">
             <div class="chip" id="daypart">AM</div>
             <div class="muted" id="today-date"></div>
-            <span class="pill" id="persist-note" hidden>⚠️ Añade a Inicio para más estabilidad</span>
+            <span class="pill" id="persist-note" hidden>⚠️ Add to Home Screen for better stability</span>
             <div class="spacer"></div>
-            <button class="btn secondary" onclick="toggleDaypartFilter()" title="Alternar filtro AM/PM">Cambiar AM/PM</button>
+            <button class="btn secondary" onclick="toggleDaypartFilter()" title="Alternar filtro AM/PM">AM/PM</button>
           </div>
           <div class="list" id="today-list"></div>
-          <div class="footer">Si el hábito tiene objetivo &gt; 1, usa +/−. La racha sube cuando alcanzas el objetivo del día.</div>
+          <div class="footer">Reach today's target to extend your streak.</div>
         </div>
       </section>
 
-      <!-- HÁBITOS -->
+      <!-- Habits -->
       <section id="panel-habits" class="card" hidden>
         <div class="p">
-          <h3 style="margin-top:0">Tus hábitos</h3>
+          <h3 style="margin-top:0">Your habits</h3>
           <div class="list" id="habit-list"></div>
           <hr style="border-color:var(--border); margin:16px 0"/>
           <div class="grid">
             <div class="half card" style="background:transparent; border:0; box-shadow:none">
               <div class="p">
-                <h4 style="margin-top:0">Añadir hábito</h4>
+                <h4 style="margin-top:0">Add Habit</h4>
                 <div class="row" style="gap:10px; align-items:flex-start; flex-wrap:wrap">
-                  <input id="new-name" type="text" placeholder="Ej.: Té verde" />
+                  <input id="new-name" type="text" placeholder="Eg.: Green Tea" />
                   <select id="new-tag" style="max-width:140px">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
-                    <option value="Any">Cualquiera</option>
+                    <option value="Any">All day</option>
                   </select>
-                  <input id="new-goal" type="number" value="1" min="1" step="1" style="max-width:120px" title="Objetivo diario (veces)" />
-                  <button class="btn" onclick="addHabitFromUI()">Añadir</button>
+                  <input id="new-goal" type="number" value="1" min="1" step="1" style="max-width:120px" title="Daily Goal" />
+                  <button class="btn" onclick="addHabitFromUI()">Add</button>
                 </div>
-                <div class="small muted" style="margin-top:6px">Puedes ajustar los días activos (L–D) después.</div>
+                <div class="small muted" style="margin-top:6px"><small>You can adjust active days later.</small>small></div>
               </div>
             </div>
             <div class="half card" style="background:transparent; border:0; box-shadow:none">
               <div class="p">
-                <h4 style="margin-top:0">Sugerencias</h4>
+                <h4 style="margin-top:0">Suggestions Library</h4>
                 <div class="row" style="flex-wrap:wrap; gap:8px">
-                  <button class="tab-btn" onclick="quickAdd('Té verde','AM')">Té verde</button>
-                  <button class="tab-btn" onclick="quickAdd('Caminata 30 min','AM')">Caminata 30′</button>
-                  <button class="tab-btn" onclick="quickAdd('English 15','Any')">English 15</button>
-                  <button class="tab-btn" onclick="quickAdd('Shutdown checklist','PM')">Shutdown</button>
-                  <button class="tab-btn" onclick="quickAdd('Infusión de hinojo','PM')">Infusión hinojo</button>
+                  <button class="tab-btn" onclick="quickAdd('Green Tea','AM')">Green Tea</button>
+                  <button class="tab-btn" onclick="quickAdd('Meditate','AM')">Meditate</button>
+                  <button class="tab-btn" onclick="quickAdd('Learn Spanish','Any')">Learn Spanish</button>
+                  <button class="tab-btn" onclick="quickAdd('Infusión de hinojo','PM')">Fennel Tea</button>
                 </div>
               </div>
             </div>
@@ -205,16 +204,16 @@
         </div>
       </section>
 
-      <!-- ESTADÍSTICAS -->
+      <!-- Statistics -->
       <section id="panel-stats" class="card" hidden>
         <div class="p">
-          <h3 style="margin-top:0">Estadísticas</h3>
+          <h3 style="margin-top:0">Statistics</h3>
           <div id="stats-wrap" class="list"></div>
           <hr style="border-color:var(--border); margin:12px 0"/>
-          <h4>Este mes</h4>
+          <h4>This month</h4>
           <div class="month" id="month-heat"></div>
           <div class="legend small" style="margin-top:8px">
-            <span class="muted">Adherencia por día:</span>
+            <span class="muted">Completion by Day</span>
             <span class="box"></span>
             <span class="box lvl1"></span>
             <span class="box lvl2"></span>
@@ -223,23 +222,23 @@
         </div>
       </section>
 
-      <!-- REVISIÓN SEMANAL -->
+      <!-- Weekly Review -->
       <section id="panel-review" class="card" hidden>
         <div class="p">
-          <h3 style="margin-top:0">Revisión semanal</h3>
+          <h3 style="margin-top:0">Weekly Review</h3>
           <div class="small muted" id="week-label"></div>
           <div class="grid" style="margin-top:8px">
             <div class="half">
               <div class="card"><div class="p">
-                <label class="small">Qué funcionó</label>
+                <label class="small">Wins</label>
                 <textarea id="rev-good" rows="3"></textarea>
-                <label class="small">Qué ajusto</label>
+                <label class="small">Improve</label>
                 <textarea id="rev-adj" rows="3"></textarea>
-                <label class="small">Un win</label>
+                <label class="small">Highlight</label>
                 <textarea id="rev-win" rows="2"></textarea>
                 <div class="row" style="margin-top:8px">
-                  <button class="btn" onclick="saveReview()">Guardar</button>
-                  <button class="btn secondary" onclick="clearReviewForm()">Limpiar</button>
+                  <button class="btn" onclick="saveReview()">Save</button>
+                  <button class="btn secondary" onclick="clearReviewForm()">Clear</button>
                 </div>
               </div></div>
             </div>
@@ -253,56 +252,56 @@
         </div>
       </section>
 
-      <!-- BACKUP + PRIVACIDAD -->
+      <!-- Backup & privacy-->
       <section id="panel-backup" class="card" hidden>
         <div class="p">
-          <h3 style="margin-top:0">Copia de seguridad / Restaurar</h3>
+          <h3 style="margin-top:0">Backup / Restore</h3>
           <div class="grid">
             <div class="half">
               <div class="card"><div class="p">
-                <p class="muted small">Exporta tus datos (copia/pega, descarga o comparte).</p>
+                <p class="muted small">Export</p>
                 <textarea id="export-box" rows="8" readonly></textarea>
                 <div class="row" style="margin-top:8px; flex-wrap:wrap">
-                  <button class="btn" onclick="doExport()">Generar exportación</button>
-                  <button class="btn secondary" onclick="copyExport()">Copiar</button>
-                  <button class="btn" onclick="downloadExport()">Descargar backup.json</button>
-                  <button class="btn" onclick="shareExport()">Compartir…</button>
+                  <button class="btn" onclick="doExport()">Export</button>
+                  <button class="btn secondary" onclick="copyExport()">Copy</button>
+                  <button class="btn" onclick="downloadExport()">Download</button>
+                  <button class="btn" onclick="shareExport()">Share</button>
                 </div>
                 <hr style="border-color:var(--border); margin:12px 0"/>
-                <h4 style="margin:0">Backup cifrado (AES-GCM)</h4>
+                <h4 style="margin:0">Encrypted Backup (AES-GCM)</h4>
                 <input id="enc-pass" type="password" placeholder="Contraseña" />
                 <div class="row" style="margin-top:8px; flex-wrap:wrap">
-                  <button class="btn" onclick="downloadEncrypted()">Descargar .hrz</button>
-                  <button class="btn secondary" onclick="shareEncrypted()">Compartir .hrz</button>
+                  <button class="btn" onclick="downloadEncrypted()">Download .hrz</button>
+                  <button class="btn secondary" onclick="shareEncrypted()">Share .hrz</button>
                 </div>
               </div></div>
             </div>
             <div class="half">
               <div class="card"><div class="p">
-                <p class="muted small">Restaurar desde archivo o pegando JSON. Puedes <strong>fusionar</strong> o <strong>reemplazar</strong>.</p>
+                <p class="muted small">Restore from a file or by pasting JSON. You can <strong>merge</strong> it with your existing data or <strong>replace</strong> it completely.</p>
                 <div class="row" style="flex-wrap:wrap">
                   <input id="import-file" type="file" accept="application/json,.hrz" />
-                  <label class="small"><input type="checkbox" id="merge-toggle" /> Fusionar (merge) en lugar de reemplazar</label>
+                  <label class="small"><input type="checkbox" id="merge-toggle" />Keep existing data (merge)</label>
                 </div>
                 <textarea id="import-box" rows="6" placeholder="Pega aquí tu JSON…"></textarea>
                 <div class="row" style="margin-top:8px; flex-wrap:wrap">
-                  <button class="btn" onclick="importFromFile()">Importar archivo</button>
-                  <button class="btn danger" onclick="doImport()">Restaurar (pegar JSON)</button>
-                  <button class="btn secondary" onclick="importEncrypted()">Importar .hrz</button>
+                  <button class="btn" onclick="importFromFile()">Import archive</button>
+                  <button class="btn danger" onclick="doImport()">Restore (paste JSON)</button>
+                  <button class="btn secondary" onclick="importEncrypted()">Import .hrz</button>
                 </div>
               </div></div>
             </div>
           </div>
 
           <hr style="border-color:var(--border); margin:16px 0"/>
-          <h3 style="margin:0">Privacidad / Seguridad</h3>
-          <p class="small muted">Tus datos viven sólo en este dispositivo. Puedes bloquear la app con un <strong>PIN</strong> local (4–8 dígitos). Si lo olvidas, sólo podrás recuperar con tu backup.</p>
+          <h3 style="margin:0">Privacy / Security</h3>
+          <p class="small muted">Your data stays on this device. Protect the app with a <strong>PIN</strong> (4–8 digits). If you forget it, restore from a backup.</p>
           <div class="grid">
             <div class="half">
               <div class="card"><div class="p">
                 <h4 style="margin-top:0">PIN de apertura</h4>
-                <input id="pin-1" inputmode="numeric" pattern="[0-9]*" type="password" placeholder="PIN (4–8 dígitos)" maxlength="8" />
-                <input id="pin-2" inputmode="numeric" pattern="[0-9]*" type="password" placeholder="Repite el PIN" maxlength="8" style="margin-top:8px" />
+                <input id="pin-1" inputmode="numeric" pattern="[0-9]*" type="password" placeholder="PIN (4–8 digits)" maxlength="8" />
+                <input id="pin-2" inputmode="numeric" pattern="[0-9]*" type="password" placeholder="Confirm PIN" maxlength="8" style="margin-top:8px" />
                 <input id="pin-hint" type="text" placeholder="Pista (opcional)" style="margin-top:8px" />
                 <div class="row" style="margin-top:8px; flex-wrap:wrap">
                   <button class="btn" onclick="enablePin()">Activar/Actualizar PIN</button>
