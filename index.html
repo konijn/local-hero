@@ -730,19 +730,21 @@
       const p1=document.getElementById('pin-1').value.trim();
       const p2=document.getElementById('pin-2').value.trim();
       const hint=document.getElementById('pin-hint').value.trim();
-      if(!/^\d{4,8}$/.test(p1)) return alert('El PIN debe tener 4–8 dígitos.');
-      if(p1!==p2) return alert('Los PIN no coinciden.');
+      if(!/^\d{4,8}$/.test(p1)) return alert('PIN must be 4–8 digits.');
+      if(p1!==p2) return alert('PINs do not match.');
       const salt=crypto.getRandomValues(new Uint8Array(16));
       const bits=await pinBits(p1, salt);
       state.security = state.security||{};
       state.security.pin = { salt: b64a(salt), hash: b64a(bits), hint };
-      saveState(); alert('PIN activado/actualizado.');
+      saveState(); alert('PIN set');
     }
+    
     function disablePin(){
-      if(!state.security || !state.security.pin) return alert('No hay PIN activo.');
+      if(!state.security || !state.security.pin) return alert('PIN is not set.');
       if(!confirm('Quitar PIN de apertura?')) return;
-      delete state.security.pin; saveState(); alert('PIN desactivado.'); hideLock();
+      delete state.security.pin; saveState(); alert('PIN deactivated.'); hideLock();
     }
+    
     async function verifyPin(pin){
       try{
         const sec=state.security && state.security.pin; if(!sec) return true;
@@ -750,7 +752,8 @@
         return expected === sec.hash;
       }catch{ return false; }
     }
-    function showHint(){ const sec=state.security && state.security.pin; const el=document.getElementById('lock-msg'); el.textContent = (sec && sec.hint) ? ('Pista: '+sec.hint) : 'No hay pista guardada.'; }
+    
+    function showHint(){ const sec=state.security && state.security.pin; const el=document.getElementById('lock-msg'); el.textContent = (sec && sec.hint) ? ('Pista: '+sec.hint) : 'No hint set.'; }
     function showLock(msg){
       const o=document.getElementById('lock');
       document.getElementById('lock-pin').value='';
@@ -758,15 +761,23 @@
       o.style.display='flex';
       setTimeout(()=>{ const inp=document.getElementById('lock-pin'); inp.focus({preventScroll:false}); if('scrollIntoView' in inp) inp.scrollIntoView({block:'center'}); },100);
     }
-    function hideLock(){ const o=document.getElementById('lock'); o.style.display='none'; }
+    
+    function hideLock(){ 
+      document.getElementById('lock').style.display = 'none'; 
+    }
+  
     async function tryUnlock(){
       const pin=document.getElementById('lock-pin').value.trim();
-      if(!/^\d{4,8}$/.test(pin)) { document.getElementById('lock-msg').textContent='PIN inválido'; return; }
+      if(!/^\d{4,8}$/.test(pin)) { document.getElementById('lock-msg').textContent='Invalid PIN'; return; }
       const ok = await verifyPin(pin);
       if(ok){ hideLock(); lastUnlockTs = Date.now(); }
-      else { document.getElementById('lock-msg').textContent='PIN incorrecto'; }
+      else { document.getElementById('lock-msg').textContent='Invalid PIN'; }
     }
-    function confirmNuke(){ if(!confirm('Esto borrará todos los datos locales (hábitos e historial). ¿Continuar?')) return; nukeAllData(); }
+    
+    function confirmNuke(){ 
+      if(!confirm('This will permanently delete all local data, including habits and history. Continue?')) return; nukeAllData(); 
+    }
+    
     async function nukeAllData(){
       try{
         indexedDB.deleteDatabase(DB_NAME);
@@ -808,40 +819,29 @@
       await requestPersistence();
       state = await loadState();
 
-      // Primer arranque: sugerencias por defecto
+      // Starter Habits
       if(!state.habits || state.habits.length===0){
         state = state || defaultState();
         const defaults = [
-          {name:'🥤 Agua al despertar', tag:'AM', goal:1, days:[]},
-          {name:'🍵 Té verde', tag:'AM', goal:1, days:[]},
-          {name:'🍳 Desayuno proteico', tag:'AM', goal:1, days:[]},
-          {name:'🥗 5 raciones fruta/verdura', tag:'Any', goal:5, days:[]},
-          {name:'🥜 Frutos secos (puñado)', tag:'Any', goal:1, days:[1,2,3,4,5]},
-          {name:'🕘 Cierre de cocina (≥3 h antes)', tag:'PM', goal:1, days:[]},
-          {name:'🌿 Infusión de hinojo', tag:'PM', goal:1, days:[]},
-          {name:'🚫 Sin alcohol (L–J)', tag:'PM', goal:1, days:[1,2,3,4]},
+          // Health
+          {name:'🥤 Water', tag:'AM', goal:1, days:[]},
+          {name:'🥗 5 Veg/Fruit', tag:'Any', goal:5, days:[]},
 
-          {name:'🚶‍♀️ Caminata 45′', tag:'AM', goal:1, days:[]},
-          {name:'🚶‍♀️ Caminata 30′', tag:'PM', goal:1, days:[]},
-          {name:'💪 Fuerza 20′', tag:'Any', goal:1, days:[1,3,5]},
-          {name:'🧘‍♀️ Movilidad 5′', tag:'AM', goal:1, days:[]},
-          {name:'🏋️‍♀️ Core 8′', tag:'Any', goal:1, days:[2,4,6]},
-          {name:'🎾 Pádel (semanal)', tag:'Any', goal:1, days:[6]},
+          // Fitness
+          {name:'🚶 Walk 30m', tag:'Any', goal:1, days:[]},
+          {name:'💪 Strength', tag:'Any', goal:1, days:[1,3,5]},
 
-          {name:'🇬🇧 English 15', tag:'Any', goal:1, days:[]},
-          {name:'📚 Lectura técnica 15′', tag:'Any', goal:1, days:[1,2,3,4]},
-          {name:'🧩 Curso AEM/skills 20′', tag:'Any', goal:1, days:[2,4]},
-          {name:'⏱️ Pomodoro 25′ (focus)', tag:'Any', goal:1, days:[1,2,3,4,5]},
-          {name:'📝 Diario de aprendizaje (3 bullets)', tag:'PM', goal:1, days:[]},
+          // Learning
+          {name:'🇬🇧 English', tag:'Any', goal:1, days:[]},
+          {name:'📚 Read 15m', tag:'Any', goal:1, days:[1,2,3,4]},
 
-          {name:'🍽️ Reset cocina 5′', tag:'PM', goal:1, days:[]},
-          {name:'🛋️ Salón recogido 5′', tag:'PM', goal:1, days:[]},
-          {name:'🧴 Baño exprés 10′', tag:'Any', goal:1, days:[3,6]},
-          {name:'🧺 Lavadora (semanal)', tag:'Any', goal:1, days:[3]},
-          {name:'🧻 Toallas (semanal)', tag:'Any', goal:1, days:[6]},
-          {name:'🛏️ Sábanas (quincenal)', tag:'Any', goal:1, days:[0]},
-          {name:'🗑️ Basura/reciclaje', tag:'PM', goal:1, days:[1,3,5]},
-          {name:'🔚 Shutdown checklist', tag:'PM', goal:1, days:[]}
+          // Home
+          {name:'🍽️ Kitchen Reset', tag:'PM', goal:1, days:[]},
+          {name:'🗑️ Trash', tag:'PM', goal:1, days:[1,3,5]},
+
+          // Mindset
+          {name:'📝 Journal', tag:'PM', goal:1, days:[]},
+          {name:'🧘 Breathe 5m', tag:'AM', goal:1, days:[]},
         ];
         for(const h of defaults){
           const id='h'+Math.random().toString(36).slice(2,9);
@@ -863,18 +863,14 @@
 
     function renderAll(){ renderToday(); renderHabits(); renderStats(); }
 
-    // ===== Seguridad mínima
-    function escapeHtml(str){
-      return String(str).replace(/[&<>"']/g, s => ({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        "\"":"&quot;",
-        "'":"&#39;"
-      }[s]));
+    // ===== Basic OWASP covererage
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
     }
 
-    // ===== iOS: altura real --vh y toast consciente del teclado
+    // ===== iOS: real viewport height (--vh) and keyboard-aware toast
     (function iosVhFix(){
       const setVh = () => {
         const h = (window.visualViewport ? visualViewport.height : window.innerHeight);
@@ -903,14 +899,14 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js', {scope:'./'})
-          .then(r => console.log('SW registrado:', r.scope))
+          .then(r => console.log('SW log:', r.scope))
           .catch(err => console.warn('SW error', err));
       });
     }
 
-    // ===== Exportar funciones al scope global (para onclick)
-    window.APP_VERSION = 'build-2025-08-12-hr2';
-    console.log('Habit Tracker versión:', window.APP_VERSION);
+    // ===== Expose functions globally for onclick handlers
+    window.APP_VERSION = 'build-2026-09';
+    console.log('Habit Tracker version:', window.APP_VERSION);
     document.documentElement.setAttribute('data-js','ok');
     Object.assign(window, {
       showTab, toggleDaypartFilter, addHabitFromUI, quickAdd,
