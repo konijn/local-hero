@@ -1,13 +1,13 @@
 {
-  "name": "Habit & Routine Tracker",
-  "short_name": "HR Tracker",
-  "description": "Seguimiento de hábitos rápido, offline y privado. PWA + IndexedDB + PIN + backups cifrados.",
+  "name": "Local Hero",
+  "short_name": "Local Hero",
+  "description": "Track your habits quickly, privately, and offline. PWA with IndexedDB storage, PIN protection, and encrypted backups.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#60a5fa",
-  "lang": "es-ES",
+  "lang": "en-US",
   "icons": [
     {
       "src": "assets/icon-192.png",
